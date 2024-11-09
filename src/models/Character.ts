@@ -5,9 +5,10 @@ export class Character {
     private _health: number;
     private _experience: number;  
     private _inventory: string[];
+   
 
  // Constructor que inicializa los atributos del personaje
-    constructor(name: string, level: number, health: number) {
+    constructor(name: string, level: number = 1, health: number = 100) {
         this._name = name;
         this._level = level;
         this._health = health;
@@ -59,10 +60,10 @@ export class Character {
    //Setter para la salud del  personaje
    // Actualiza la salud asegurandose de que no sea negativa
     public set health(health: number) {
-      if(health >= 0) {
+      if(health >= 0 && health <= 100) { //Agregamos un limite maximo de salud
         this._health = health;
       } else {
-        console.log("La salud no puede ser un numero negativo");
+        console.log("La salud debe estar entre 0 y 100");
         
       }
     }
@@ -90,19 +91,55 @@ export class Character {
       }
     }
 
-
-  // Metodo para añadir un item al inventario
-  addItem(item: string): void {
+ // Metodo para añadir un item al inventario
+  public addItem(item: string): void {
     this._inventory.push(item);
   }
 
    // Método para eliminar un ítem del inventario. Devuelve un booleano si el ítem fue eliminado correctamente
-    removeItem(item: string): boolean {
+    public removeItem(item: string): boolean {
         const index = this._inventory.indexOf(item);
         if (index !== -1) {
           this._inventory.splice(index, 1);
           return true;
         }
         return false;
+      }
+
+      // Metodo para restaurar salud
+      public heal(amount: number): void {
+        if(amount > 0) {
+          this._health = Math.min(this._health + amount, 100); //No superar el maximo de 100 de salud
+          console.log(`${this._name} ha restaurado ${amount} puntos de salud. Salud actual ${this._health}`);
+          
+        } else {
+          console.log("La cantidad de salud a restaurar debe ser mayor a 0.");
+          
+        }
+      }
+      //Metodo para subir de nivel
+      public levelUp(): void {
+        const experienceRequiredForLevelUp = 1000; //Experiencia requerida para subir de nivel 1000 puntos
+        if(this._experience >= experienceRequiredForLevelUp) {
+          this._level += 1;
+          this._experience = 0; //Reiniciar experiencia a 0 al subir de nivel.
+          console.log(`${this._name} ha subido al nivel ${this._level}!`);
+        } else {
+          console.log(`${this.name} necesita mas experiencia para subir de nivel.`);
+          
+        }
+      }
+      //Metodo para completar una mision y ganar experiencia
+      public completeMission(experienceGained: number): void {
+        if(experienceGained > 0) {
+          this._experience += experienceGained;
+          console.log(`${this._name} ha ganado ${experienceGained} puntos de experiencia`);
+          
+          //Revisar si sube de nivel
+          this.levelUp();
+        } else {
+          console.log("La experiencia ganada no puede ser negativa o cero.");
+          
+        }
       }
     }

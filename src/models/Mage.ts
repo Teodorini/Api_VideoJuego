@@ -64,6 +64,8 @@ export class Mage extends Character {
       this._mana += manaRecovered;  // Recarga 20 puntos de maná
       console.log(`${this.name} medita y recupera ${manaRecovered} puntos de maná. Maná actual: ${this._mana}`);
   }
+
+  
 }
 
 

@@ -124,6 +124,11 @@ export class Character {
           this._level += 1;
           this._experience = 0; //Reiniciar experiencia a 0 al subir de nivel.
           console.log(`${this._name} ha subido al nivel ${this._level}!`);
+
+      // Aumentamos atributos al subir de nivel
+          this._health = Math.min(this._health + 10, 100);  // Aumentamos la salud (pero no más de 100)
+          console.log(`${this._name} ahora tiene ${this._health} puntos de salud.`);
+      
         } else {
           console.log(`${this.name} necesita mas experiencia para subir de nivel.`);
           

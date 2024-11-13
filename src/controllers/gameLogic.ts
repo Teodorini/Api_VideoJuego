@@ -2,6 +2,8 @@ import { Character } from "../models/Character";
 import { Warrior } from "../models/Warrior";
 import { Mage } from "../models/Mage";
 import { Mission } from "../models/Mission";
+import { calculateExperience, successProbability } from "../helpers/experienceHelper";  // Cambié la importación
+import { generateRandomEvent } from "../helpers/randomHelper";  // Cambié la importación
 
 let characters: Character[] = []; // Lista de personajes creados
 let missions: Mission[] = []; // Lista de misiones disponibles
@@ -9,6 +11,7 @@ let missions: Mission[] = []; // Lista de misiones disponibles
 // Crea un nuevo personaje dependiendo del tipo y lo agrega a la lista
 function createCharacter(name: string, level: number, health: number, type: 'warrior' | 'mage'): Character {
     let character: Character;
+try {   
     if (type === 'warrior') {
         character = new Warrior(name, level, health, 10, 5);  // Valores iniciales
     } else {
@@ -16,7 +19,11 @@ function createCharacter(name: string, level: number, health: number, type: 'war
     };
     characters.push(character);
     return character;
-};
+} catch (error) {
+    console.error("Error al crear el personaje:", error);
+    throw new Error("No se pudo crear el personaje.");  // Agregado manejo de errores
+}
+}
 
 // Devuelve la lista completa de personajes en characters
 function listCharacters(): Character[] {
@@ -26,41 +33,61 @@ function listCharacters(): Character[] {
 // Busca un personaje por nombre  ene character y actualiza su nivel o salud
 // si se proporcionan valores nuevos
 function updateCharacter(name: string, newLevel?: number, newHealth?: number): void {
+try {  
     const character = characters.find(elem => elem.name === name);
     if (character) {
         if (newLevel) character.level = newLevel;
         if (newHealth) character.health = newHealth;
+        console.log(`${character.name} ha sido actualizado.`);
+    } else {
+        throw new Error(`Personaje con el nombre ${name} no encontrado.`);  // Si el personaje no existe, lanzamos un error
     };
+}catch (error) {
+    console.error("Error al actualizar el personaje:", error);
+    throw new Error("No se pudo actualizar el personaje.");  // Agregado manejo de errores
+}
 };
 
 // Eliminar un personaje de la lista
-
 function deleteCharacter(name: string): void {
     const index = characters.findIndex(elem => elem.name === name);
     if (index !== -1) {
       characters.splice(index, 1);
       console.log(`Personaje ${name} ha sido eliminado de lista con éxito`);
     } else {
-      console.log(`Personaje ${name} no se encontra en la lista de personajes creados`);
+      console.log(`Personaje ${name} no se encuentra en la lista de personajes creados`);
     }
   }
 
 // Asignar una misión a un personaje
 function assignMission(character: Character, mission: Mission): void {
+ try {   
     console.log(`${character.name} ha sido asignado a la misión: ${mission.description}`);
     missions.push(mission); // Registra la misión asignada
+} catch(error){
+    console.error("Error al asignar misión:", error);
+    throw new Error("No se pudo asignar la misión.");  // Agregado manejo de errores
+}
 };
-
 // Permite completar una misión y sumar una recompensa, sino muestra un mensaje
 function completeMission(character: Character, mission: Mission): boolean {
+try {
+    // Usamos la probabilidad de éxito calculada
+    const successChance = successProbability(character.level, mission.difficulty);
+    
     if (character.level >= mission.difficulty) {
         console.log(`${character.name} ha completado la misión.`);
         character.experience += mission.reward;
         return true;
+    
     } else {
         console.log(`${character.name} no tiene el nivel suficiente.`);
         return false;
     };
+} catch(error){
+    console.error("Error al completar la misión:", error);
+        throw new Error("No se pudo completar la misión.");  // Agregado manejo de errores
+}
 };
 
 // Lista todas las misiones asignadas
@@ -71,20 +98,24 @@ function listMissions(): Mission[] {
 // Función asíncrona para simular eventos aleatorios en el juego
 
 async function triggerEvent(character: Character): Promise<void> {
-
+try {
     if (character.health <= 0) {
       console.error(`${character.name} no puede participar en eventos porque está muerto.`);
       return;
     };
 
        //Simula un evento aleatorio para un perosnaje (encuentro o recompensa)
-    const event = Math.random() > 0.5 ? 'encuentro sorpresa' : 'recompensa';
+    const event =  generateRandomEvent();  // Cambié esto para usar `generateRandomEvent`
     console.log(`${character.name} ha tenido un evento: ${event}`);
 
        //Espera 2 segundos antes de continuar
-    await new Promise(resolve => setTimeout(resolve, 2000));
+    await new Promise(resolve => setTimeout(resolve, 2000)); // Simula tiempo de evento
     console.log(`${character.name} ha respondido al evento.`);
-  };
+  } catch(error) {
+    console.error("Error al generar el evento:", error);
+        throw new Error("No se pudo generar el evento.");  // Agregado manejo de errores
+  }
+};
 
 // Función para manejar múltiples misiones de forma secuencial usando Promesas
 function acceptMissions(character: Character, missions: Mission[]): Promise<void> {
@@ -122,7 +153,8 @@ function acceptMissionsWithCallback(character: Character, missions: Mission[], c
     let currentMissionIndex = 0;
 
     function completeNextMission() {
-        if (currentMissionIndex < missions.length) {
+        try {
+            if (currentMissionIndex < missions.length) {
             const mission = missions[currentMissionIndex];
             if (completeMission(character, mission)) {
                 console.log(`Misión completada: ${mission.description}`);
@@ -131,10 +163,13 @@ function acceptMissionsWithCallback(character: Character, missions: Mission[], c
             } else {
                 callback(new Error(`${character.name} falló en la misión ${mission.description}.`));
             }
-        } else {
+            } else {
             callback(null); // Todas las misiones completadas sin error
         };
-    };
+    } catch(error){
+        callback(new Error("Error al procesar las misiones."));  // En caso de error general en la ejecución
+        }
+    }
 
     completeNextMission();
 };

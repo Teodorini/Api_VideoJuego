@@ -5,6 +5,7 @@ export class Character {
     private _health: number;
     private _experience: number;  
     private _inventory: string[];
+    
    
 
  // Constructor que inicializa los atributos del personaje
@@ -14,6 +15,7 @@ export class Character {
         this._health = health;
         this._experience = 0;
         this._inventory = [];
+        
     }
     //Metodos de get 
     public get name(): string {

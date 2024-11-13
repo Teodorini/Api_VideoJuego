@@ -1,56 +1,53 @@
 import { Character } from "./Character";
 
-
 export class Warrior extends Character {
   private _attack: number;
   private _defense: number;
-  private _stamina: number;//resistencia que podría reducirse y regenerarse gradualmente
-  private _isAlive: boolean;//para saber si esta vivo o no
-  private equipment: string[] = [];//para almacenar equipos y armas
+  private _stamina: number; // Resistencia que podría reducirse y regenerarse gradualmente
+  private _isAlive: boolean; // Para saber si está vivo o no
+  private equipment: string[] = []; // Para almacenar equipos y armas
 
   constructor(name: string, level: number, health: number, attack: number, defense: number) {
-    super(name, level, health); //Llama al constructor de la clase base. 
+    super(name, level, health); // Llama al constructor de la clase base
     this._attack = attack;
     this._defense = defense;
     this._stamina = 100; // Valor inicial de resistencia
     this._isAlive = true;
-  };
+  }
 
-  //getters
+  // Getters
   public get attack(): number {
     return this._attack;
-  };
+  }
 
   public get defense(): number {
     return this._defense;
-  };
+  }
 
   public get stamina(): number {
     return this._stamina;
-  };
+  }
 
   public get isAlive(): boolean {
     return this._isAlive;
-  };
+  }
 
-  //setters
+  // Setters
   public set attack(attack: number) {
     if (attack > 0) {
       this._attack = attack;
     } else {
       console.log("El ataque debe ser mayor a cero.");
-
     }
-  };
+  }
 
   public set defense(defense: number) {
     if (defense >= 0) {
       this._defense = defense;
     } else {
       console.log("La defensa no puede ser negativa.");
-
     }
-  };
+  }
 
   public set stamina(value: number) {
     if (value > 100) {
@@ -60,26 +57,10 @@ export class Warrior extends Character {
     } else {
       this._stamina = value; // Si el valor está entre 0 y 100, lo asigna tal cual
     }
-  };
-  // Método de combate para Warrior
-  // public attackOpponent(opponent: Character): void {
-  //   if (opponent instanceof Warrior) { // Aseguramos que el oponente sea un Warrior
-  //     const damage = this._attack - opponent.defense; // Solo Warrior tiene `defense`
-  //     if (damage > 0) {
-  //       // Usamos el setter de health para modificar la salud del oponente
-  //       opponent.health -= damage;
-  //       console.log(`${this.name} inflige ${damage} puntos de daño a ${opponent.name}`);
-  //     } else {
-  //       console.log(`${this.name} no puede dañar a ${opponent.name}`);
-  //     }
-  //   } else {
-  //     console.log("El oponente no es un Warrior y no tiene defensa.");
-  //   }
-  // }
+  }
 
   // Propuesta de código verificando la vida, resistencia y manejo de muerte del guerrero
   public attackOpponent(opponent: Warrior): void {
-
     if (!this._isAlive) {
       console.log(`${this.name} está muerto y no puede atacar.`);
       return;
@@ -106,30 +87,27 @@ export class Warrior extends Character {
     } else {
       console.log("El oponente no es un Warrior y no tiene defensa.");
     }
-  };
+  }
 
-  // Método específico para el Warrior. Defiende
-  defend() {
+  // Método específico para el Warrior. Defiende.
+  public defend(): void {
     console.log(`${this.name} está defendiendo con ${this._defense} puntos de defensa.`);
-  };
+  }
 
-  // Para regenerar resistencia
+  // Para regenerar resistencia.
   public regenerateStamina(): void {
-
     if (this._stamina < 100) {
       this._stamina = Math.min(100, this._stamina + 5); // Incrementa resistencia hasta el máximo de 100
       console.log(`${this.name} ha recuperado 5 puntos de resistencia. Resistencia actual: ${this._stamina}`);
     }
-  };
+  }
 
   // Método para equipar un objeto
   public equipItem(item: string): void {
-
-    //Agregar un item al inventario del guerrero, almacenando en el array equipment
+    // Agregar un item al inventario del guerrero, almacenando en el array equipment
     this.equipment.push(item);
     console.log(`${this.name} ha equipado: ${item}`);
-  };
-
+  }
 
   // Método para mostrar el estado actual del Warrior
   public checkStatus(): void {
@@ -140,7 +118,7 @@ export class Warrior extends Character {
     console.log(`- Defensa: ${this._defense}`);
     console.log(`- Estado: ${this._isAlive ? 'Vivo' : 'Muerto'}`);
     console.log(`- Equipamiento: ${this.equipment.length > 0 ? this.equipment.join(', ') : 'Ninguno'}`);
-  };
+  }
 
   // Método para revivir al Warrior si está muerto
   public revive(): void {
@@ -151,5 +129,5 @@ export class Warrior extends Character {
     } else {
       console.log(`${this.name} ya está vivo.`);
     }
-  };
-};
+  }
+}

@@ -2,24 +2,41 @@ import { createCharacter, listCharacters, updateCharacter, deleteCharacter, assi
 import { Mission, MissionType } from '../models/Mission';
 
 // Crear personajes
-const warrior = createCharacter('Lyrius', 5, 100, 'warrior');
-const mage = createCharacter('Merlin', 7, 80, 'mage');
+const warrior = createCharacter('Lyrius', 7, 100, 'warrior');
+const mage = createCharacter('Merlin', 5, 100, 'mage');
 
 // Listar personajes
 console.log("\nPersonajes creados:\n");
 console.log(listCharacters());
+//---------------------------------------------------------------
+// Agregar objetos al inventario
+warrior.addItem('Espada de Hierro');
+warrior.addItem('Escudo de Plata');
+mage.addItem('Bastón Mágico');
+mage.addItem('Poción de Mana');
+
+
+// Equipar ítems al Warrior
+warrior.addItem('Espada de Hierro');
+warrior.addItem('Escudo de Plata');
+
+
+//........................................................
+
 
 // Actualizar personaje
 console.log("\nActualizando nivel de Lyrius...\n");
 updateCharacter('Lyrius', 10);
+console.log("\nActualizando nivel de Merlin...\n");
+updateCharacter('Merlin', 8);
 console.log("\nPersonajes después de la actualización:\n");
 console.log(listCharacters());
 
 // Crear misiones
-const mission1 = new Mission('Rescatar al prisionero', 5, 50, MissionType.Main);
-const mission2 = new Mission('Recolectar hierbas mágicas', 3, 30, MissionType.Side);
-const mission3 = new Mission('Explorar la cueva de dragones', 7, 100, MissionType.Side);
-const mission4 = new Mission('Defender el castillo', 4, 40, MissionType.Main);
+const mission1 = new Mission('Rescatar al prisionero', 2, 110, MissionType.Main);
+const mission2 = new Mission('Recolectar hierbas mágicas', 1, 50, MissionType.Side);
+const mission3 = new Mission('Explorar la cueva de dragones', 5, 100, MissionType.Side);
+const mission4 = new Mission('Defender el castillo', 4, 150, MissionType.Main);
 
 // Asignar misiones a los personajes
 console.log("\nAsignando misiones a los personajes:\n");
@@ -34,6 +51,7 @@ console.log(listMissions());
 console.log("\nIntentando completar misiones:\n");
 completeMission(warrior, mission1);  // Debería ser exitoso si el nivel del guerrero es suficiente
 completeMission(mage, mission2);     // Debería ser exitoso si el nivel del mago es suficiente
+completeMission(mage,mission4)
 
 // Ejecutar un evento aleatorio para cada personaje
 console.log("\nSimulando eventos aleatorios para los personajes:\n");

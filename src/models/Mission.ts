@@ -1,3 +1,5 @@
+import { Character } from "./Character";
+
 export enum MissionType {
     Main = "Main", //Mision principal
     Side = "Side", //Mision secundaria
@@ -72,11 +74,14 @@ export class Mission {
 
     // Método para completar la misión
 
-    public complete(): void {
+    public complete(character: Character): void { //Modificado 
 
         if (!this._isCompleted) {
             //Actualizamos el valor a True
             this._isCompleted = true;
+
+    // Agrego para incrementar la experiencia del personaje
+        character.experience += this._reward;
 
             console.log(`Misión completada: ${this._description}`);
             console.log(`Tipo de misión: ${this._type}`);

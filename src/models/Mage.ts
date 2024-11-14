@@ -10,7 +10,7 @@ export class Mage extends Character {
         this._magicPower = magicPower;
         this._mana = mana;
     }
-    //Metodos set
+    //Metodos Getters
     public get magicPower(): number {
       return this._magicPower;
     }
@@ -65,6 +65,11 @@ export class Mage extends Character {
       console.log(`${this.name} medita y recupera ${manaRecovered} puntos de maná. Maná actual: ${this._mana}`);
   }
 
+// // Agrego método para completar una misión y ganar experiencia
+//    public completeMission(experienceGained: number): void {
+//     super.completeMission(experienceGained); // Llama al método de la clase base para añadir experiencia y verificar el nivel
+//     console.log(`${this.name} ha completado la misión y ganado ${experienceGained} puntos de experiencia.`);
+//   }
   
 }
 

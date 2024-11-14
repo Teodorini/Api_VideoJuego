@@ -17,7 +17,7 @@ export class Character {
         this._inventory = [];
         
     }
-    //Metodos de get 
+    //Metodos de get  
     public get name(): string {
       return this._name
     }
@@ -96,6 +96,7 @@ export class Character {
  // Metodo para añadir un item al inventario
   public addItem(item: string): void {
     this._inventory.push(item);
+    console.log(`${this.name} ha agregado ${item} a su inventario.`);
   }
 
    // Método para eliminar un ítem del inventario. Devuelve un booleano si el ítem fue eliminado correctamente
@@ -121,14 +122,17 @@ export class Character {
       }
       //Metodo para subir de nivel
       public levelUp(): void {
-        const experienceRequiredForLevelUp = 1000; //Experiencia requerida para subir de nivel 1000 puntos
+        const experienceRequiredForLevelUp = 100;  // Ajustamos la experiencia necesaria según el nivel
+
         if(this._experience >= experienceRequiredForLevelUp) {
           this._level += 1;
-          this._experience = 0; //Reiniciar experiencia a 0 al subir de nivel.
+          this._experience -= experienceRequiredForLevelUp; // Restamos la experiencia para el siguiente nivel
+          // this._experience = 0; //Reiniciar experiencia a 0 al subir de nivel.
           console.log(`${this._name} ha subido al nivel ${this._level}!`);
 
       // Aumentamos atributos al subir de nivel
           this._health = Math.min(this._health + 10, 100);  // Aumentamos la salud (pero no más de 100)
+          console.log(`${this._name} ha subido al nivel ${this._level}!`);
           console.log(`${this._name} ahora tiene ${this._health} puntos de salud.`);
       
         } else {
@@ -141,9 +145,13 @@ export class Character {
         if(experienceGained > 0) {
           this._experience += experienceGained;
           console.log(`${this._name} ha ganado ${experienceGained} puntos de experiencia`);
+
+          // Verificar si el personaje sube de nivel después de ganar la experiencia
+          while (this._experience >= 100) {
+            this.levelUp();  // Si tiene suficiente experiencia, sube de nivel
+        }
           
-          //Revisar si sube de nivel
-          this.levelUp();
+      
         } else {
           console.log("La experiencia ganada no puede ser negativa o cero.");
           

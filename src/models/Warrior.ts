@@ -130,4 +130,5 @@ export class Warrior extends Character {
       console.log(`${this.name} ya está vivo.`);
     }
   }
+
 }

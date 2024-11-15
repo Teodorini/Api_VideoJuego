@@ -19,6 +19,9 @@ Objetos (POO), programación asíncrona, y versionado de código con Git y GitHu
 - `Funcionalidad 1`: Personajes- `Funcionalidad 2`: Misiones- `Funcionalidad 3`: Simulación de juego-
 
 *[Acceso al proyecto](#acceso-proyecto)
+ Para poder ejecutar el proyecto es necesario tener instalado type sript. 
+ Para ello se debe ejecutar el comando: npm install -g typescript
+ *Luego situados en  src\config ejecutar el comando: npx ts-node index.ts
 
 *[Tecnologías utilizadas](#tecnologías-utilizadas)
 

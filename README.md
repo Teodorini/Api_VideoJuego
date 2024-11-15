@@ -2,7 +2,11 @@
 
 *[Título e imagen de portada](#Título-e-imagen-de-portada)
 
-*[Insignias](#insignias)
+*[IObjetivos del proyecto](#Objetivos del proyecto)
+• Configurar y versionar proyectos con Git y GitHub.
+• Aplicar POO en TypeScript.
+• Crear y gestionar personajes y misiones en un juego.
+• Usar programación asíncrona para simular eventos de juego.
 
 *[Índice](#índice)
 

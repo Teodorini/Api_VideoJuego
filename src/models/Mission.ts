@@ -7,6 +7,7 @@ export enum MissionType {
 }
 
 export class Mission {
+    private _name: string;
     private _description: string;
     private _difficulty: number;
     private _reward: number;
@@ -14,12 +15,17 @@ export class Mission {
     private _isCompleted: boolean = false; // Para saber si la misión está completada
 
 
-    constructor(description: string, difficulty: number, reward: number, type: MissionType) {
+    constructor(name: string, description: string, difficulty: number, reward: number, type: MissionType) {
+        this._name =name;
         this._description = description;
         this._difficulty = difficulty;
         this._reward = reward;
         this._type = type;
 
+    };
+
+    public get name(): string {
+        return this._name;
     };
 
     public get description(): string {

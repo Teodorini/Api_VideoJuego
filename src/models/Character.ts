@@ -4,7 +4,7 @@ export class Character {
     private _level: number;
     private _health: number;
     private _experience: number;  
-    private _inventory: string[];
+    private _inventory: string[]=[];
     
    
 
@@ -16,27 +16,27 @@ export class Character {
         this._experience = 0;
         this._inventory = [];
         
-    }
+    };
     //Metodos de get  
     public get name(): string {
       return this._name
-    }
+    };
 
     public get level(): number {
       return this._level
-    }
+    };
 
     public get health(): number {
       return this._health
-    }
+    };
 
     public get experience(): number {
       return this._experience
-    }
+    };
 
     public get inventory(): string[] {
       return this._inventory;
-    }
+    };
 
     // Setter para el nombre del personaje
 
@@ -46,8 +46,8 @@ export class Character {
         this._name = name;
       } else {
         console.log("El Nombre no puede quedar vacio");
-        }
-    }
+        };
+    };
 
     // Setter para el nivel del personaje
     // Actualizar nivel confirmando que sea un mumero positivo
@@ -56,8 +56,8 @@ export class Character {
         this._level = level;
       } else {
         console.log("El nivel debe ser un número positivo.");
-        }
-   }
+        };
+   };
 
    //Setter para la salud del  personaje
    // Actualiza la salud asegurandose de que no sea negativa
@@ -67,8 +67,8 @@ export class Character {
       } else {
         console.log("La salud debe estar entre 0 y 100");
         
-      }
-    }
+      };
+    };
 
     // Setter para la experiencia del personaje
     // Permite actualizar la experiencia, asegurándose de que no sea negativa.
@@ -78,8 +78,8 @@ export class Character {
       } else {
         console.log("La experiencia no puede ser un número negativo.");
         
-      }
-    }
+      };
+    };
 
 
     // Setter para el inventario
@@ -90,14 +90,18 @@ export class Character {
       } else {
         console.log("El inventario debe ser de cadenas de texto");
         
-      }
-    }
+      };
+    };
 
  // Metodo para añadir un item al inventario
-  public addItem(item: string): void {
-    this._inventory.push(item);
-    console.log(`${this.name} ha agregado ${item} a su inventario.`);
-  }
+ addItem(item: string) {
+  if (!this.inventory.includes(item)) {
+      this.inventory.push(item);
+      console.log(`${item} agregado al inventario de ${this.name}.`);
+  } else {
+      console.log(`${item} ya está en el inventario de ${this.name}.`);
+  };
+};
 
    // Método para eliminar un ítem del inventario. Devuelve un booleano si el ítem fue eliminado correctamente
     public removeItem(item: string): boolean {
@@ -107,7 +111,7 @@ export class Character {
           return true;
         }
         return false;
-      }
+      };
 
       // Metodo para restaurar salud
       public heal(amount: number): void {
@@ -118,8 +122,8 @@ export class Character {
         } else {
           console.log("La cantidad de salud a restaurar debe ser mayor a 0.");
           
-        }
-      }
+        };
+      };
       //Metodo para subir de nivel
       public levelUp(): void {
         const experienceRequiredForLevelUp = 100;  // Ajustamos la experiencia necesaria según el nivel
@@ -138,8 +142,8 @@ export class Character {
         } else {
           console.log(`${this.name} necesita mas experiencia para subir de nivel.`);
           
-        }
-      }
+        };
+      };
       //Metodo para completar una mision y ganar experiencia
       public completeMission(experienceGained: number): void {
         if(experienceGained > 0) {
@@ -149,12 +153,12 @@ export class Character {
           // Verificar si el personaje sube de nivel después de ganar la experiencia
           while (this._experience >= 100) {
             this.levelUp();  // Si tiene suficiente experiencia, sube de nivel
-        }
+        };
           
       
         } else {
           console.log("La experiencia ganada no puede ser negativa o cero.");
           
-        }
-      }
-    }
+        };
+      };
+    };

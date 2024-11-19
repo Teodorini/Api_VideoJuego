@@ -48,16 +48,15 @@ try {
 }
 };
 
-// Eliminar un personaje de la lista
-function deleteCharacter(name: string): void {
-    const index = characters.findIndex(elem => elem.name === name);
-    if (index !== -1) {
-      characters.splice(index, 1);
-      console.log(`Personaje ${name} ha sido eliminado de lista con éxito`);
-    } else {
-      console.log(`Personaje ${name} no se encuentra en la lista de personajes creados`);
+
+   function deleteCharacter(name: string): boolean {
+    const index = characters.findIndex(char => char.name === name);
+    if (index > -1) {
+        characters.splice(index, 1);
+        return true;
     }
-  }
+    return false;
+}
 
 // Asignar una misión a un personaje
 function assignMission(character: Character, mission: Mission): void {
@@ -90,11 +89,11 @@ try {
 }
 };
 
-// Lista todas las misiones asignadas
+
+
 function listMissions(): Mission[] {
     return missions;
 }
-
 // Función asíncrona para simular eventos aleatorios en el juego
 
 async function triggerEvent(character: Character): Promise<void> {

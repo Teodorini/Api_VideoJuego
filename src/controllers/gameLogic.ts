@@ -1,119 +1,300 @@
+import * as fs from 'fs';
+import * as path from 'path';
 import { Character } from "../models/Character";
 import { Warrior } from "../models/Warrior";
 import { Mage } from "../models/Mage";
 import { Mission } from "../models/Mission";
-import { calculateExperience, successProbability } from "../helpers/experienceHelper";  // Cambié la importación
-import { generateRandomEvent } from "../helpers/randomHelper";  // Cambié la importación
+import { MissionType } from '../models/Mission';
+import { successProbability } from "../helpers/experienceHelper";  
+import { generateRandomEvent } from "../helpers/randomHelper";  
+import { CharacterData } from '../models/CharacteData';
 
-let characters: Character[] = []; // Lista de personajes creados
-let missions: Mission[] = []; // Lista de misiones disponibles
+// Ruta del archivo donde se guardan los personajes
+const CHARACTER_FILE = path.resolve(__dirname, '../data/characters.json');
+
+//Arrays que almacenan la lista de personajes y misiones respectivamente
+export let characters: Character[] = []; 
+export let missions: Mission[] = []; 
+
+// Función auxiliar para encontrar personajes por nombre en el array characters
+function findCharacterByName(name: string): Character | undefined {
+    return characters.find(char => char.name.toLowerCase() === name.toLowerCase());
+};
+
+// Función para cargar los personajes desde un archivo JSON
+function loadCharactersFromFile(): void {
+
+    //Verifica si el archivo existe
+    if (fs.existsSync(CHARACTER_FILE)) {
+        try {
+            const data = fs.readFileSync(CHARACTER_FILE, 'utf-8');
+
+            //si el archivo existe, lee los datos y los convierte de JSONa objetos
+            const loadedCharacters: CharacterData[] = JSON.parse(data);
+
+            loadedCharacters.forEach((char: CharacterData) => {
+                let character: Character;
+
+                //dependiendo del tipo de personaje crea instancias y las añade a characters
+                if (char.type === 'warrior') {
+                    character = new Warrior(char.name, char.level, char.health, char.attack, char.defense);
+                } else if (char.type === 'mage') {
+                    character = new Mage(char.name, char.level, char.health, char.mana, char.magicPower);
+                } else {
+                    character = new Character(char.name, char.level, char.health);
+                }
+            
+                character.experience = char.experience || 0;
+                character.inventory = Array.isArray(char.inventory) ? char.inventory : [];
+                character.missions = Array.isArray(char.missions) ? char.missions.map(mission => new Mission(mission.name, mission.description, mission.difficulty, mission.reward, mission.type)) : []; // Cargar misiones
+            
+                characters.push(character);
+            });
+            
+
+            console.log('Personajes cargados correctamente.');
+        } catch (error) {
+            console.error('Error al leer el archivo de personajes:', error);
+        }
+    } else {
+
+        // si el archivo no existe crea un archivo JSON vacio
+        console.log('No se encontró el archivo de personajes, creando uno nuevo.');
+        fs.writeFileSync(CHARACTER_FILE, '[]'); // Crea archivo vacío
+    };
+};
+
+// Función para guardar los personajes en un archivo JSON
+function saveCharactersToFile(): void {
+    //con el map se transforma cada objeto Character au un formato complatible con JSON
+    const charactersData = characters.map((char: Character) => ({
+        name: char.name,
+        level: char.level,
+        health: char.health,
+        experience: char.experience,
+        inventory: char.inventory,
+        type: char instanceof Warrior ? 'warrior' : char instanceof Mage ? 'mage' : 'character',
+        attack: char instanceof Warrior ? char.attack : undefined,
+        defense: char instanceof Warrior ? char.defense : undefined,
+        mana: char instanceof Mage ? char.mana : undefined,
+        magicPower: char instanceof Mage ? char.magicPower : undefined,
+        missions: char.missions.map(mission => ({
+            name: mission.name,
+            description: mission.description,
+            difficulty: mission.difficulty,
+            reward: mission.reward,
+            type: mission.type,
+        })) 
+    }));
+    //para escribir en el JSON generado en el archivo CHARACTER_FILE
+    fs.writeFileSync(CHARACTER_FILE, JSON.stringify(charactersData, null, 2));
+    console.log('Personajes guardados correctamente.');
+};
+
+//---Gestión de Personajes---
 
 // Crea un nuevo personaje dependiendo del tipo y lo agrega a la lista
-function createCharacter(name: string, level: number, health: number, type: 'warrior' | 'mage'): Character {
-    let character: Character;
-try {   
-    if (type === 'warrior') {
-        character = new Warrior(name, level, health, 10, 5);  // Valores iniciales
-    } else {
-        character = new Mage(name, level, health, 20, 50);  // Valores iniciales
+function createCharacter(name: string, level: number, health: number): void {
+    if (!name || isNaN(level) || isNaN(health)) {
+        console.error('Datos inválidos para crear un personaje.');
+        return;
     };
-    characters.push(character);
-    return character;
-} catch (error) {
-    console.error("Error al crear el personaje:", error);
-    throw new Error("No se pudo crear el personaje.");  // Agregado manejo de errores
-}
-}
+
+    // Verifica si el personaje ya existe
+    const characterExists = characters.some(char => char.name.toLowerCase() === name.toLowerCase());
+
+    if (characterExists) {
+        console.error(`El personaje "${name}" ya existe.`);
+        return;
+    };
+
+    // Crea y agrega el nuevo personaje y se guarda en el archivo json
+    const newCharacter = new Character(name, level, health);
+    characters.push(newCharacter);
+    saveCharactersToFile();
+    console.log(`Personaje "${name}" creado exitosamente.`);
+};
 
 // Devuelve la lista completa de personajes en characters
 function listCharacters(): Character[] {
     return characters;
 };
 
-// Busca un personaje por nombre  ene character y actualiza su nivel o salud
-// si se proporcionan valores nuevos
-function updateCharacter(name: string, newLevel?: number, newHealth?: number): void {
-try {  
-    const character = characters.find(elem => elem.name === name);
-    if (character) {
-        if (newLevel) character.level = newLevel;
-        if (newHealth) character.health = newHealth;
-        console.log(`${character.name} ha sido actualizado.`);
-    } else {
-        throw new Error(`Personaje con el nombre ${name} no encontrado.`);  // Si el personaje no existe, lanzamos un error
+// busca el personaje por su nombre y, si lo encuentra, actualiza las propiedades level y health, siempre
+
+function updateCharacter(name: string, newLevel: number, newHealth: number): void {
+    
+    //findIndex para localizar el personaje en el arreglo characters
+    const index = characters.findIndex(char => char.name && char.name.toLowerCase() === name.toLowerCase());
+
+    if (index === -1) {
+        console.log(`No se pudo encontrar el personaje "${name}".`);
+        return; 
     };
-}catch (error) {
-    console.error("Error al actualizar el personaje:", error);
-    throw new Error("No se pudo actualizar el personaje.");  // Agregado manejo de errores
-}
+
+    // para actualizar los valores
+    characters[index].level = newLevel;
+    characters[index].health = newHealth;
+    console.log(`Nivel y salud del personaje "${name}" actualizado actualizados.`);
+
+
+    saveCharactersToFile(); 
 };
 
 
-   function deleteCharacter(name: string): boolean {
-    const index = characters.findIndex(char => char.name === name);
+// Elimina un personaje por nombre
+function deleteCharacter(name: string): boolean {
+    const index = characters.findIndex(
+        (char) => char.name && char.name.toLowerCase() === name.toLowerCase()
+    );
+
     if (index > -1) {
         characters.splice(index, 1);
+        saveCharactersToFile(); 
+        console.log(`Personaje "${name}" eliminado.`);
         return true;
-    }
+    };
+
+    console.log(`No se pudo encontrar el personaje "${name}".`);
     return false;
-}
+};
 
 // Asignar una misión a un personaje
-function assignMission(character: Character, mission: Mission): void {
- try {   
-    console.log(`${character.name} ha sido asignado a la misión: ${mission.description}`);
-    missions.push(mission); // Registra la misión asignada
-} catch(error){
-    console.error("Error al asignar misión:", error);
-    throw new Error("No se pudo asignar la misión.");  // Agregado manejo de errores
-}
+function assignMission(charName: string, missionName: string, description: string, difficulty: number, reward: number, type: MissionType): string {
+    const char = findCharacterByName(charName);
+    
+    //verifica si el personaje existe
+    if (!char) {
+        return `Personaje "${charName}" no encontrado.`;
+    };
+    //para verificar si todos los datos para la misión estan presentes y en el formato adecuado 
+    if (!missionName || !description || isNaN(difficulty) || isNaN(reward) || !type) {
+        return "Datos de misión inválidos.";
+    };
+ 
+    //creación de la misión
+    const mission = new Mission(missionName, description, difficulty, reward, type);
+    console.log(`Misión creada: ${JSON.stringify(mission)}`);  
+    char.missions.push(mission);
+    console.log(`Misiones de ${char.name}: ${JSON.stringify(char.missions)}`);  
+
+    saveCharactersToFile();
+    return `Misión "${missionName}" asignada a "${charName}".`;
 };
+
+
 // Permite completar una misión y sumar una recompensa, sino muestra un mensaje
 function completeMission(character: Character, mission: Mission): boolean {
-try {
-    // Usamos la probabilidad de éxito calculada
-    const successChance = successProbability(character.level, mission.difficulty);
-    
-    if (character.level >= mission.difficulty) {
-        console.log(`${character.name} ha completado la misión.`);
-        character.experience += mission.reward;
-        return true;
-    
-    } else {
-        console.log(`${character.name} no tiene el nivel suficiente.`);
-        return false;
+    try {
+        // para calcular la probabilidad de éxito
+        const successChance = successProbability(character.level, mission.difficulty);
+
+        //para subir el nivel si es aplicable
+        if (character.level >= mission.difficulty) {
+            
+            //si la misión fue exitosa
+            character.experience += mission.reward;
+            console.log(`${character.name} ha completado la misión.`);
+            return true;
+
+        } else {
+            console.log(`${character.name} no tiene el nivel suficiente.`);
+            return false;
+        };
+    } catch (error) {
+        console.error("Error al completar la misión:", error);
+        throw new Error("No se pudo completar la misión.");  
     };
-} catch(error){
-    console.error("Error al completar la misión:", error);
-        throw new Error("No se pudo completar la misión.");  // Agregado manejo de errores
-}
 };
 
 
-
+// Devuelve la lista de misiones disponibles
 function listMissions(): Mission[] {
-    return missions;
-}
+
+    //se crea un array vacio donde se almacenarán todas las misiones
+    let allMissions: Mission[] = [];
+
+    //para iterar en el array characters
+    characters.forEach(character => {
+        //devuelve un nuevo arary sin modificar el original
+        allMissions = allMissions.concat(character.missions);
+    });
+
+    if (allMissions.length === 0) {
+        console.log("No hay misiones asignadas.");
+        return []; // si no hay misisones retorna un array vacio
+    } else {
+        return allMissions; 
+    };
+};
+
+
+// Función para gestionar el inventario de un personaje, agrega, elimina o lista elementos en su inventario
+function manageInventory(charName: string, action: 'add' | 'remove' | 'list', item?: string): string | string[] {
+   
+    //para buscar el personaje
+    const character = findCharacterByName(charName);
+
+    if (!character) {
+        return `Personaje "${charName}" no encontrado.`;
+    };
+
+    // para agregar, eliminar y listar elementos del inventario
+    switch (action) {
+        case 'add':
+            if (!item) {
+                return "Debe especificar un elemento para agregar.";
+            }
+            character.inventory.push(item);
+            saveCharactersToFile();
+            return `Elemento "${item}" agregado al inventario de "${charName}".`;
+
+        case 'remove':
+            if (!item) {
+                return "Debe especificar un elemento para eliminar.";
+            };
+
+            //se utiliza el método indexOf() para buscar el índice del elemento item en el arreglo inventory del personaje
+            const itemIndex = character.inventory.indexOf(item);
+            if (itemIndex === -1) {
+                return `Elemento "${item}" no encontrado en el inventario de "${charName}".`;
+            };
+
+            //splice() elimina un elemento del arreglo en la posición itemIndex y elimina un solo elemento 
+            character.inventory.splice(itemIndex, 1);
+            saveCharactersToFile();
+            return `Elemento "${item}" eliminado del inventario de "${charName}".`;
+
+        case 'list':
+            return character.inventory.length > 0
+                ? character.inventory
+                : `El inventario de "${charName}" está vacío.`;
+
+        default:
+            return "Acción inválida. Use 'add', 'remove' o 'list'.";
+    };
+};
+
 // Función asíncrona para simular eventos aleatorios en el juego
 
 async function triggerEvent(character: Character): Promise<void> {
-try {
-    if (character.health <= 0) {
-      console.error(`${character.name} no puede participar en eventos porque está muerto.`);
-      return;
-    };
+    try {
+        if (character.health <= 0) {
+            console.error(`${character.name} no puede participar en eventos porque está muerto.`);
+            return;
+        };
 
-       //Simula un evento aleatorio para un perosnaje (encuentro o recompensa)
-    const event =  generateRandomEvent();  // Cambié esto para usar `generateRandomEvent`
-    console.log(`${character.name} ha tenido un evento: ${event}`);
+        //Simula un evento aleatorio para un perosnaje (encuentro o recompensa)
+        const event = generateRandomEvent();  // Cambié esto para usar `generateRandomEvent`
+        console.log(`${character.name} ha tenido un evento: ${event}`);
 
-       //Espera 2 segundos antes de continuar
-    await new Promise(resolve => setTimeout(resolve, 2000)); // Simula tiempo de evento
-    console.log(`${character.name} ha respondido al evento.`);
-  } catch(error) {
-    console.error("Error al generar el evento:", error);
+        //Espera 2 segundos antes de continuar
+        await new Promise(resolve => setTimeout(resolve, 2000)); // Simula tiempo de evento
+        console.log(`${character.name} ha respondido al evento.`);
+    } catch (error) {
+        console.error("Error al generar el evento:", error);
         throw new Error("No se pudo generar el evento.");  // Agregado manejo de errores
-  }
+    };
 };
 
 // Función para manejar múltiples misiones de forma secuencial usando Promesas
@@ -151,27 +332,38 @@ function acceptMissions(character: Character, missions: Mission[]): Promise<void
 function acceptMissionsWithCallback(character: Character, missions: Mission[], callback: (error: Error | null) => void) {
     let currentMissionIndex = 0;
 
+    //se llama por primera vez para comenzar a completar las misiones.
     function completeNextMission() {
         try {
-            if (currentMissionIndex < missions.length) {
-            const mission = missions[currentMissionIndex];
-            if (completeMission(character, mission)) {
-                console.log(`Misión completada: ${mission.description}`);
-                currentMissionIndex++;
-                completeNextMission(); // Pasar a la siguiente misión
-            } else {
-                callback(new Error(`${character.name} falló en la misión ${mission.description}.`));
-            }
-            } else {
-            callback(null); // Todas las misiones completadas sin error
-        };
-    } catch(error){
-        callback(new Error("Error al procesar las misiones."));  // En caso de error general en la ejecución
-        }
-    }
 
+            //se verifica si el índice de la misión actual es menor que la longitud del arreglo de misiones
+            if (currentMissionIndex < missions.length) {
+                const mission = missions[currentMissionIndex];
+
+                // si es veradero
+                if (completeMission(character, mission)) {
+                    console.log(`Misión completada: ${mission.description}`);
+                    //se obtiene la misión actual del arreglo de misiones 
+                    currentMissionIndex++;
+                    // Pasa a la siguiente misión
+                    completeNextMission(); 
+                } else {
+                    callback(new Error(`${character.name} falló en la misión ${mission.description}.`));
+                }
+            } else {
+                callback(null); // Todas las misiones completadas sin error
+            };
+        } catch (error) {
+            callback(new Error("Error al procesar las misiones."));  // En caso de error general en la ejecución
+        };
+    };
+  
+  //se llama a la función completeNextMission de manera recursiva para completar la siguiente misión
     completeNextMission();
 };
+
+// función de carga al iniciar
+loadCharactersFromFile();
 
 export {
     createCharacter,
@@ -183,5 +375,9 @@ export {
     listMissions,
     triggerEvent,
     acceptMissions,
-    acceptMissionsWithCallback
+    acceptMissionsWithCallback,
+    loadCharactersFromFile,
+    saveCharactersToFile,
+    findCharacterByName,
+    manageInventory
 };

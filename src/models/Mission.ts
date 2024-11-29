@@ -1,9 +1,9 @@
 import { Character } from "./Character";
 
 export enum MissionType {
-    Main = "Main", //Mision principal
-    Side = "Side", //Mision secundaria
-    Event = "Event", // Mision de evento
+    Main = "Main", 
+    Side = "Side", 
+    Event = "Event", 
 }
 
 export class Mission {
@@ -12,8 +12,7 @@ export class Mission {
     private _difficulty: number;
     private _reward: number;
     private _type: MissionType;
-    private _isCompleted: boolean = false; // Para saber si la misión está completada
-
+    private _isCompleted: boolean = false; 
 
     constructor(name: string, description: string, difficulty: number, reward: number, type: MissionType) {
         this._name =name;

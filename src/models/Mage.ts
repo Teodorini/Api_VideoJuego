@@ -2,22 +2,24 @@ import { Character } from "./Character";
 
 
 export class Mage extends Character {
-    private _magicPower: number; //Cantidad de poder para lanzar hechizos
-    private _mana: number; //recursos disponibles para lanzar hechizos.
+    //Cantidad de poder para lanzar hechizos
+    private _magicPower: number; 
+    //recursos disponibles para lanzar hechizos.
+    private _mana: number; 
 
     constructor(name: string, level: number, health: number, magicPower: number, mana: number) {
-        super(name, level, health);  // Llamada al constructor de la clase base
+        super(name, level, health);  
         this._magicPower = magicPower;
         this._mana = mana;
-    }
+    };
     //Metodos Getters
     public get magicPower(): number {
       return this._magicPower;
-    }
+    };
 
     public get mana(): number {
       return this._mana;
-    }
+    };
 
     //Sets
     public set magicPower(magicPower: number) {
@@ -25,28 +27,32 @@ export class Mage extends Character {
           this._magicPower = magicPower;
       } else {
           console.log("El poder mágico debe ser mayor a cero.");
-      }
-  }
+      };
+  };
 
   public set mana(mana: number) {
       if (mana >= 0) {
           this._mana = mana;
       } else {
           console.log("El maná no puede ser negativo.");
-      }
-  }
+      };
+  };
 
   // Método para lanzar un hechizo
   public castSpell(opponent: Character): void {
-      if (this._mana > 0) {  // Verifica si el Mage tiene maná suficiente
-          const damage = this._magicPower;  // El daño que el Mage hace con su hechizo
-          opponent.health -= damage;  // Reducir la salud del oponente
-          this._mana -= 10;  // El Mage gasta 10 de maná por hechizo
+    // Verifica si el Mage tiene maná suficiente
+      if (this._mana > 0) { 
+        //daño que el Mage hace con su hechizo 
+          const damage = this._magicPower; 
+          // para reducir la salud del oponente 
+          opponent.health -= damage; 
+          // el amgo gasta 10 de maná por hechizo 
+          this._mana -= 10;  
           console.log(`${this.name} lanza un hechizo e inflige ${damage} puntos de daño a ${opponent.name}.`);
       } else {
           console.log(`${this.name} no tiene suficiente maná para lanzar un hechizo.`);
-      }
-  }
+      };
+  };
 
   // Método para recargar maná
   public rechargeMana(amount: number): void {
@@ -55,22 +61,16 @@ export class Mage extends Character {
           console.log(`${this.name} recarga ${amount} puntos de maná. Maná actual: ${this._mana}`);
       } else {
           console.log("La cantidad de maná a recargar debe ser mayor a cero.");
-      }
-  }
+      };
+  };
 
   // Método específico para el Mage: meditar para recuperar maná
   public meditate(): void {
       const manaRecovered = 20;
       this._mana += manaRecovered;  // Recarga 20 puntos de maná
       console.log(`${this.name} medita y recupera ${manaRecovered} puntos de maná. Maná actual: ${this._mana}`);
-  }
-
-// // Agrego método para completar una misión y ganar experiencia
-//    public completeMission(experienceGained: number): void {
-//     super.completeMission(experienceGained); // Llama al método de la clase base para añadir experiencia y verificar el nivel
-//     console.log(`${this.name} ha completado la misión y ganado ${experienceGained} puntos de experiencia.`);
-//   }
+  };
   
-}
+};
 
 

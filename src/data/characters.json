@@ -1,0 +1,40 @@
+[
+  {
+    "name": "mario",
+    "level": 9,
+    "health": 90,
+    "experience": 90,
+    "inventory": [
+      "martillo"
+    ],
+    "type": "character",
+    "missions": [
+      {
+        "name": "rescatar princesa",
+        "description": "pelear con kupa en el castillo de fuego",
+        "difficulty": 9,
+        "reward": 90,
+        "type": "event"
+      }
+    ]
+  },
+  {
+    "name": "mario",
+    "level": 9,
+    "health": 90,
+    "experience": 90,
+    "inventory": [
+      "espada"
+    ],
+    "type": "character",
+    "missions": [
+      {
+        "name": "rescatar princesa",
+        "description": "pelear con kupa en el castillo de fuego",
+        "difficulty": 9,
+        "reward": 90,
+        "type": "event"
+      }
+    ]
+  }
+]

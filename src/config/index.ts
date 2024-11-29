@@ -1,17 +1,16 @@
 
 
-
 const readlineSync = require('readline-sync');
-import { createCharacter, listCharacters, updateCharacter, deleteCharacter, assignMission, completeMission, listMissions, triggerEvent } from '../controllers/gameLogic';
-import { Mission, MissionType } from '../models/Mission';
-import { Character } from "../models/Character";
+import {
+    characters, loadCharactersFromFile, saveCharactersToFile, createCharacter, listCharacters,
+    updateCharacter, deleteCharacter, assignMission, listMissions, completeMission, triggerEvent, manageInventory,findCharacterByName
+} from '../controllers/gameLogic';
 
 
-// Array para almacenar personajes
-const characters: Character[] = [];
+async function mainMenu() {
+    console.log("--- BIENVENIDO AL SISTEMA DE JUEGO ---");
+    loadCharactersFromFile();
 
-async function main() {
-    console.log("Bienvenido al Sistema de Juego.");
     let exit = false;
 
     while (!exit) {
@@ -20,141 +19,139 @@ async function main() {
         console.log("2. Listar Personajes");
         console.log("3. Actualizar Nivel de un Personaje");
         console.log("4. Eliminar Personaje");
-        console.log("5. Crear y Asignar Mision");
+        console.log("5. Crear y Asignar Misión");
         console.log("6. Listar Misiones");
-        console.log("7. Completar Mision");
+        console.log("7. Completar Misión");
         console.log("8. Generar Evento Aleatorio");
-        console.log("9. Agregar Objetos al Inventario de un Personaje");
+        console.log("9. Gestionar Inventario de un Personaje");
         console.log("10. Salir");
 
-        const option = readlineSync.question("Selecciona una opcion: ");
+        const option = readlineSync.question("Selecciona una opción: ").trim();
 
-        try {
-            switch (option) {
-                case '1': 
-                    const name = readlineSync.question("Nombre del personaje: ");
-                    const level = parseInt(readlineSync.question("Nivel inicial: "), 10);
-                    const health = parseInt(readlineSync.question("Salud inicial: "), 10);
-                    const newCharacter = new Character(name, level, health);
-                    characters.push(newCharacter);
-                    console.log(`Personaje "${name}" creado.`);
-                    break;
+        switch (option) {
+            case '1':
+                const name = readlineSync.question("Nombre del personaje: ").trim();
+                const level = parseInt(readlineSync.question("Nivel inicial: "), 10);
+                const health = parseInt(readlineSync.question("Salud inicial: "), 10);
+                //Llama a createCharacter, que agrega el personaje al arreglo y guarda los cambios
+                console.log(createCharacter(name, level, health));
+                break;
+            case '2':
+                //Muestra una lista de todos los personajes usando listCharacters
+                console.log(listCharacters());
+                break;
+            case '3':
+                const updateName = readlineSync.question("Nombre del personaje a actualizar: ").trim();
+                const newLevel = parseInt(readlineSync.question("Nuevo nivel: "), 10);
+                const newHealth = parseInt(readlineSync.question("Nueva salud: "), 10);
+                //Actualiza el nivel y la salud de un personaje existente utilizando updateCharacter
+                console.log(updateCharacter(updateName, newLevel, newHealth));
+                break;
+            case '4':
+                const deleteName = readlineSync.question("Nombre del personaje a eliminar: ").trim();
+                //Elimina un personaje por nombre utilizando deleteCharacter
+                console.log(deleteCharacter(deleteName));
+                break;
+            case '5':
+                const charName = readlineSync.question("Nombre del personaje: ").trim();
+                const missionName = readlineSync.question("Nombre de la misión: ").trim();
+                const description = readlineSync.question("Descripción de la misión: ").trim();
+                const difficulty = parseInt(readlineSync.question("Dificultad (1-10): "), 10);
+                const reward = parseInt(readlineSync.question("Recompensa: "), 10);
+                const type = readlineSync.question("Tipo (Main/Side/Event): ").trim() as any;
 
-                case '2': 
-                    if (characters.length === 0) {
-                        console.log("No hay personajes creados.");
-                        break;
-                    }
-                    console.log("Personajes existentes:");
-                    characters.forEach((character, index) => {
-                        console.log(`${index + 1}. ${character.name} (Nivel: ${character.level}, Salud: ${character.health}, Experiencia: ${character.experience})`);
-                    });
-                    break;
-
-                case '3':
-                    const charName = readlineSync.question("Nombre del personaje a actualizar: ");
-                    const newLevel = parseInt(readlineSync.question("Nuevo nivel: "), 10);
-
-                    if (isNaN(newLevel)) {
-                        console.log("Por favor, introduce un valor válido para el nivel.");
-                        break;
-                    }
-
-                    updateCharacter(charName, newLevel);
-                    break;
-
-                case '4':
-                    const deleteName = readlineSync.question("Nombre del personaje a eliminar: ");
-                    if (deleteCharacter(deleteName)) {
-                        console.log("Personaje eliminado exitosamente.");
+                //Asigna una nueva misión a un personaje existente, pasando detalles como nombre, dificultad y recompensa
+                //usa la función assignMission()
+                console.log(assignMission(charName, missionName, description, difficulty, reward, type));
+                break;
+            case '6':
+                console.log("Lista de Misiones:");
+                //Muestra todas las misiones asignadas usando listMissions
+                console.log(listMissions());
+                break;
+            case '7':
+                const missionCharName = readlineSync.question("Nombre del personaje que completará la misión: ").trim();
+                const missionToCompleteName = readlineSync.question("Nombre de la misión a completar: ").trim();
+                //Busca un personaje y una misión específica para intentar completarla
+                const character = characters.find(char => char.name.toLowerCase() === missionCharName.toLowerCase());
+                if (character) {
+                    const mission = character.missions.find(m => m.name === missionToCompleteName);
+                    if (mission) {
+                        console.log(completeMission(character, mission));
                     } else {
-                        console.log("El personaje no existe.");
+                        console.log("Misión no encontrada.");
                     }
-                    break;
+                } else {
+                    console.log("Personaje no encontrado.");
+                };
+                break;
+            case '8':
+                const eventCharName = readlineSync.question("Nombre del personaje para generar el evento: ").trim();
+                //Genera un evento aleatorio para un personaje usando triggerEvent
+                const eventCharacter = characters.find(char => char.name.toLowerCase() === eventCharName.toLowerCase());
+                if (eventCharacter) {
+                    await triggerEvent(eventCharacter);
+                } else {
+                    console.log("Personaje no encontrado.");
+                };
+                break;
+            case '9':
+                const inventoryCharName = readlineSync.question("Nombre del personaje para gestionar el inventario: ").trim();
+                const inventoryCharacter = findCharacterByName(inventoryCharName);
 
-                case '5':
-                    const missionName = readlineSync.question("Nombre de la misión: ");
-                    const description = readlineSync.question("Descripción de la misión: ");
-                    const difficulty = parseInt(readlineSync.question("Dificultad (entre 1-10): "), 10);
-                    const reward = parseInt(readlineSync.question("Recompensa: "), 10);
-                    const type = readlineSync.question("Tipo (Main/Side/Event): ") as MissionType;
+                if (!inventoryCharacter) {
+                    console.log("El personaje no existe.");
+                    break; 
+                };
 
-                    const mission = new Mission(missionName, description, difficulty, reward, type);
-                    const assignName = readlineSync.question("Nombre del personaje al que se asignará la misión: ");
-                    const character = listCharacters().find(char => char.name === assignName);
+                let exitInventoryMenu = false;
+                while (!exitInventoryMenu) {
+                    console.log(`\n--- Gestión de Inventario para ${inventoryCharacter.name} ---`);
+                    console.log("1. Agregar objeto");
+                    console.log("2. Ver inventario");
+                    console.log("3. Eliminar objeto");
+                    console.log("4. Salir del inventario");
 
-                    if (character) {
-                        assignMission(character, mission);
-                    } else {
-                        console.log("El personaje no existe.");
-                    }
-                    break;
+                    const inventoryOption = readlineSync.question("Selecciona una opcion: ");
+                    //Permite agregar, listar o eliminar objetos del inventario del personaje seleccionado
+                    switch (inventoryOption) {
+                        case '1':
+                            const itemNameToAdd = readlineSync.question("Nombre del objeto a agregar: ").trim();
+                            console.log(manageInventory(inventoryCharacter.name, 'add', itemNameToAdd));
+                            break;
 
-                case '6':
-                    console.log("\nMisiones:");
-                    console.table(listMissions());
-                    break;
+                        case '2':
+                            console.log(manageInventory(inventoryCharacter.name, 'list'));
+                            break;
 
-                case '7':
-                    const completeChar = readlineSync.question("Nombre del personaje que completará la misión: ");
-                    const missionCompleteName = readlineSync.question("Nombre de la misión a completar: ");
-                    const completeMissionInstance = listMissions().find(m => m.name === missionCompleteName);
-                    const characterComplete = listCharacters().find(char => char.name === completeChar);
+                        case '3':
+                            const itemNameToRemove = readlineSync.question("Nombre del objeto a eliminar: ").trim();
+                            console.log(manageInventory(inventoryCharacter.name, 'remove', itemNameToRemove));
+                            break;
 
-                    if (characterComplete && completeMissionInstance) {
-                        completeMission(characterComplete, completeMissionInstance);
-                        console.log(`Misión completada por ${characterComplete.name}.`);
-                    } else {
-                        console.log("Personaje o misión no encontrados.");
-                    }
-                    break;
+                        case '4':
+                            console.log(`Saliendo del inventario de ${inventoryCharacter.name}.`);
+                            exitInventoryMenu = true;
+                            break;
 
-                case '8':
-                    const eventChar = readlineSync.question("Nombre del personaje para el evento: ");
-                    const eventCharacter = listCharacters().find(char => char.name === eventChar);
+                        default:
+                            console.log("Opción no válida. Por favor, intenta nuevamente.");
+                            break;
+                    };
+                };
+                break;
 
-                    if (eventCharacter) {
-                        await triggerEvent(eventCharacter);
-                        console.log(`Evento aleatorio generado para ${eventCharacter.name}.`);
-                    } else {
-                        console.log("Personaje no encontrado.");
-                    }
-                    break;
-
-                case '9':
-                    if (characters.length === 0) {
-                        console.log("No hay personajes creados.");
-                        break;
-                    }
-
-                    console.log("Selecciona un personaje:");
-                    characters.forEach((character, index) => {
-                        console.log(`${index + 1}. ${character.name}`);
-                    });
-
-                    const characterIndex = parseInt(readlineSync.question("Número del personaje: "), 10) - 1;
-                    if (characterIndex >= 0 && characterIndex < characters.length) {
-                        const selectedCharacter = characters[characterIndex];
-                        const itemName = readlineSync.question("Nombre del objeto a agregar: ");
-                        selectedCharacter.addItem(itemName); // Uso del método de la clase
-                    } else {
-                        console.log("Selección inválida.");
-                    }
-                    break;
-
-                case '10': 
-                    console.log("Saliendo del sistema. ¡Adiós!");
-                    exit = true;
-                    break;
-
-                default:
-                    console.log("Opción no válida.");
-                    break;
-            }
-        } catch (error: any) {
-            console.error("Error:", error.message);
-        }
+            case '10':
+                console.log("Saliendo del sistema. ¡Adiós!");
+                exit = true;
+                break;
+            default:
+                console.log("Opción no válida.");
+        };
     };
+
+    saveCharactersToFile();
 };
 
-main();
+
+mainMenu();

@@ -1,3 +1,5 @@
+import { Mission } from './Mission';
+
 // Clase para representar a un personaje en el juego
 export class Character {
     private _name: string;
@@ -5,7 +7,7 @@ export class Character {
     private _health: number;
     private _experience: number;  
     private _inventory: string[]=[];
-    
+    missions: Mission[];
    
 
  // Constructor que inicializa los atributos del personaje
@@ -15,6 +17,7 @@ export class Character {
         this._health = health;
         this._experience = 0;
         this._inventory = [];
+        this.missions = [];
         
     };
     //Metodos de get  
@@ -93,7 +96,7 @@ export class Character {
       };
     };
 
- // Metodo para añadir un item al inventario
+ // Método para añadir un item al inventario
  addItem(item: string) {
   if (!this.inventory.includes(item)) {
       this.inventory.push(item);
@@ -113,7 +116,7 @@ export class Character {
         return false;
       };
 
-      // Metodo para restaurar salud
+      // Método para restaurar salud
       public heal(amount: number): void {
         if(amount > 0) {
           this._health = Math.min(this._health + amount, 100); //No superar el maximo de 100 de salud

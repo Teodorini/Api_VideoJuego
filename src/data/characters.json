@@ -1,11 +1,13 @@
 [
   {
     "name": "mario",
-    "level": 9,
-    "health": 90,
-    "experience": 90,
+    "level": 10,
+    "health": 80,
+    "experience": 180,
     "inventory": [
-      "martillo"
+      "espada",
+      "Arco",
+      "Flecha"
     ],
     "type": "character",
     "missions": [
@@ -19,21 +21,24 @@
     ]
   },
   {
-    "name": "mario",
-    "level": 9,
-    "health": 90,
-    "experience": 90,
+    "name": "Marian",
+    "level": 13,
+    "health": 96,
+    "experience": 400,
     "inventory": [
-      "espada"
+      "Arma de fuego",
+      "Espada",
+      "Bola de fuego",
+      "Cuchilla"
     ],
     "type": "character",
     "missions": [
       {
-        "name": "rescatar princesa",
-        "description": "pelear con kupa en el castillo de fuego",
-        "difficulty": 9,
-        "reward": 90,
-        "type": "event"
+        "name": "Meli",
+        "description": "salvar a Meli",
+        "difficulty": 10,
+        "reward": 100,
+        "type": "Main"
       }
     ]
   }

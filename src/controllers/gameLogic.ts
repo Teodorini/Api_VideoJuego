@@ -48,7 +48,11 @@ function loadCharactersFromFile(): void {
                 character.inventory = Array.isArray(char.inventory) ? char.inventory : [];
                 character.missions = Array.isArray(char.missions) ? char.missions.map(mission => new Mission(mission.name, mission.description, mission.difficulty, mission.reward, mission.type)) : []; // Cargar misiones
             
-                characters.push(character);
+                  // Se agrega linea de codigo para solucionar personaje duplicado en json
+                  const characterExists = characters.some(existingChar => existingChar.name.toLowerCase() === character.name.toLowerCase());
+                  if (!characterExists) {
+                      characters.push(character);
+                  }
             });
             
 
@@ -96,7 +100,7 @@ function saveCharactersToFile(): void {
 // Crea un nuevo personaje dependiendo del tipo y lo agrega a la lista
 function createCharacter(name: string, level: number, health: number): void {
     if (!name || isNaN(level) || isNaN(health)) {
-        console.error('Datos inválidos para crear un personaje.');
+        console.error('Datos invalidos para crear un personaje.');
         return;
     };
 
@@ -107,6 +111,8 @@ function createCharacter(name: string, level: number, health: number): void {
         console.error(`El personaje "${name}" ya existe.`);
         return;
     };
+
+    
 
     // Crea y agrega el nuevo personaje y se guarda en el archivo json
     const newCharacter = new Character(name, level, health);
@@ -127,9 +133,10 @@ function updateCharacter(name: string, newLevel: number, newHealth: number): voi
     //findIndex para localizar el personaje en el arreglo characters
     const index = characters.findIndex(char => char.name && char.name.toLowerCase() === name.toLowerCase());
 
+    // Si el personaje no se encuentra, mostramos un error y salimos de la función
     if (index === -1) {
         console.log(`No se pudo encontrar el personaje "${name}".`);
-        return; 
+      return; 
     };
 
     // para actualizar los valores
@@ -169,17 +176,17 @@ function assignMission(charName: string, missionName: string, description: strin
     };
     //para verificar si todos los datos para la misión estan presentes y en el formato adecuado 
     if (!missionName || !description || isNaN(difficulty) || isNaN(reward) || !type) {
-        return "Datos de misión inválidos.";
+        return "Datos de mision invalidos.";
     };
  
     //creación de la misión
     const mission = new Mission(missionName, description, difficulty, reward, type);
-    console.log(`Misión creada: ${JSON.stringify(mission)}`);  
+    console.log(`Mision creada: ${JSON.stringify(mission)}`);  
     char.missions.push(mission);
     console.log(`Misiones de ${char.name}: ${JSON.stringify(char.missions)}`);  
 
     saveCharactersToFile();
-    return `Misión "${missionName}" asignada a "${charName}".`;
+    return `Mision "${missionName}" asignada a "${charName}".`;
 };
 
 
@@ -194,7 +201,7 @@ function completeMission(character: Character, mission: Mission): boolean {
             
             //si la misión fue exitosa
             character.experience += mission.reward;
-            console.log(`${character.name} ha completado la misión.`);
+            console.log(`${character.name} ha completado la mision.`);
             return true;
 
         } else {
@@ -202,8 +209,8 @@ function completeMission(character: Character, mission: Mission): boolean {
             return false;
         };
     } catch (error) {
-        console.error("Error al completar la misión:", error);
-        throw new Error("No se pudo completar la misión.");  
+        console.error("Error al completar la mision:", error);
+        throw new Error("No se pudo completar la mision.");  
     };
 };
 
@@ -268,10 +275,10 @@ function manageInventory(charName: string, action: 'add' | 'remove' | 'list', it
         case 'list':
             return character.inventory.length > 0
                 ? character.inventory
-                : `El inventario de "${charName}" está vacío.`;
+                : `El inventario de "${charName}" está vacio.`;
 
         default:
-            return "Acción inválida. Use 'add', 'remove' o 'list'.";
+            return "Acción invalida. Use 'add', 'remove' o 'list'.";
     };
 };
 
@@ -280,7 +287,7 @@ function manageInventory(charName: string, action: 'add' | 'remove' | 'list', it
 async function triggerEvent(character: Character): Promise<void> {
     try {
         if (character.health <= 0) {
-            console.error(`${character.name} no puede participar en eventos porque está muerto.`);
+            console.error(`${character.name} no puede participar en eventos porque esta muerto.`);
             return;
         };
 
@@ -311,13 +318,13 @@ function acceptMissions(character: Character, missions: Mission[]): Promise<void
                 //para completar la misión actual
                 const mission = missions[currentMissionIndex];
                 if (completeMission(character, mission)) {
-                    console.log(`Misión completada: ${mission.description}`);
+                    console.log(`Mision completada: ${mission.description}`);
                     //se inscremente el indice de la misión
                     currentMissionIndex++;
                     completeNextMission(); // Pasar a la siguiente misión
                 } else {
                     //Si la misión no se completa con éxito, se rechaza la promesa con un error
-                    reject(new Error(`${character.name} falló en la misión ${mission.description}.`));
+                    reject(new Error(`${character.name} fallo en la mision ${mission.description}.`));
                 }
             } else {
                 resolve(); // Todas las misiones completadas
@@ -342,13 +349,13 @@ function acceptMissionsWithCallback(character: Character, missions: Mission[], c
 
                 // si es veradero
                 if (completeMission(character, mission)) {
-                    console.log(`Misión completada: ${mission.description}`);
+                    console.log(`Mision completada: ${mission.description}`);
                     //se obtiene la misión actual del arreglo de misiones 
                     currentMissionIndex++;
                     // Pasa a la siguiente misión
                     completeNextMission(); 
                 } else {
-                    callback(new Error(`${character.name} falló en la misión ${mission.description}.`));
+                    callback(new Error(`${character.name} fallo en la mision ${mission.description}.`));
                 }
             } else {
                 callback(null); // Todas las misiones completadas sin error
@@ -362,8 +369,8 @@ function acceptMissionsWithCallback(character: Character, missions: Mission[], c
     completeNextMission();
 };
 
-// función de carga al iniciar
-loadCharactersFromFile();
+// // función de carga al iniciar
+// loadCharactersFromFile();
 
 export {
     createCharacter,

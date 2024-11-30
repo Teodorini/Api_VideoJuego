@@ -62,7 +62,7 @@ export class Warrior extends Character {
   // Propuesta de código verificando la vida, resistencia y manejo de muerte del guerrero
   public attackOpponent(opponent: Warrior): void {
     if (!this._isAlive) {
-      console.log(`${this.name} está muerto y no puede atacar.`);
+      console.log(`${this.name} esta muerto y no puede atacar.`);
       return;
     };
     if (this._stamina < 10) {
@@ -127,7 +127,7 @@ export class Warrior extends Character {
       this.health = 50; // Restaura la salud parcialmente al revivir
       console.log(`${this.name} ha sido revivido con 50 puntos de salud.`);
     } else {
-      console.log(`${this.name} ya está vivo.`);
+      console.log(`${this.name} ya esta vivo.`);
     };
   };
 

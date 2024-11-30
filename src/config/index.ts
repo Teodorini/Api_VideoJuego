@@ -1,5 +1,3 @@
-
-
 const readlineSync = require('readline-sync');
 import {
     characters, loadCharactersFromFile, saveCharactersToFile, createCharacter, listCharacters,
@@ -14,19 +12,21 @@ async function mainMenu() {
     let exit = false;
 
     while (!exit) {
+        console.log("\n----------------------------");
         console.log("\nMenú de Opciones:");
+        console.log("\n----------------------------");
         console.log("1. Crear Personaje");
         console.log("2. Listar Personajes");
         console.log("3. Actualizar Nivel de un Personaje");
         console.log("4. Eliminar Personaje");
-        console.log("5. Crear y Asignar Misión");
+        console.log("5. Crear y Asignar Mision");
         console.log("6. Listar Misiones");
-        console.log("7. Completar Misión");
+        console.log("7. Completar Mision");
         console.log("8. Generar Evento Aleatorio");
         console.log("9. Gestionar Inventario de un Personaje");
         console.log("10. Salir");
 
-        const option = readlineSync.question("Selecciona una opción: ").trim();
+        const option = readlineSync.question("Selecciona una opcion: ").trim();
 
         switch (option) {
             case '1':
@@ -45,7 +45,7 @@ async function mainMenu() {
                 const newLevel = parseInt(readlineSync.question("Nuevo nivel: "), 10);
                 const newHealth = parseInt(readlineSync.question("Nueva salud: "), 10);
                 //Actualiza el nivel y la salud de un personaje existente utilizando updateCharacter
-                console.log(updateCharacter(updateName, newLevel, newHealth));
+                (updateCharacter(updateName, newLevel, newHealth));
                 break;
             case '4':
                 const deleteName = readlineSync.question("Nombre del personaje a eliminar: ").trim();
@@ -54,8 +54,8 @@ async function mainMenu() {
                 break;
             case '5':
                 const charName = readlineSync.question("Nombre del personaje: ").trim();
-                const missionName = readlineSync.question("Nombre de la misión: ").trim();
-                const description = readlineSync.question("Descripción de la misión: ").trim();
+                const missionName = readlineSync.question("Nombre de la mision: ").trim();
+                const description = readlineSync.question("Descripcion de la mision: ").trim();
                 const difficulty = parseInt(readlineSync.question("Dificultad (1-10): "), 10);
                 const reward = parseInt(readlineSync.question("Recompensa: "), 10);
                 const type = readlineSync.question("Tipo (Main/Side/Event): ").trim() as any;
@@ -70,8 +70,8 @@ async function mainMenu() {
                 console.log(listMissions());
                 break;
             case '7':
-                const missionCharName = readlineSync.question("Nombre del personaje que completará la misión: ").trim();
-                const missionToCompleteName = readlineSync.question("Nombre de la misión a completar: ").trim();
+                const missionCharName = readlineSync.question("Nombre del personaje que completara la mision: ").trim();
+                const missionToCompleteName = readlineSync.question("Nombre de la mision a completar: ").trim();
                 //Busca un personaje y una misión específica para intentar completarla
                 const character = characters.find(char => char.name.toLowerCase() === missionCharName.toLowerCase());
                 if (character) {
@@ -79,7 +79,7 @@ async function mainMenu() {
                     if (mission) {
                         console.log(completeMission(character, mission));
                     } else {
-                        console.log("Misión no encontrada.");
+                        console.log("Mision no encontrada.");
                     }
                 } else {
                     console.log("Personaje no encontrado.");
@@ -106,7 +106,7 @@ async function mainMenu() {
 
                 let exitInventoryMenu = false;
                 while (!exitInventoryMenu) {
-                    console.log(`\n--- Gestión de Inventario para ${inventoryCharacter.name} ---`);
+                    console.log(`\n--- Gestion de Inventario para ${inventoryCharacter.name} ---`);
                     console.log("1. Agregar objeto");
                     console.log("2. Ver inventario");
                     console.log("3. Eliminar objeto");
@@ -135,18 +135,18 @@ async function mainMenu() {
                             break;
 
                         default:
-                            console.log("Opción no válida. Por favor, intenta nuevamente.");
+                            console.log("Opcion no valida. Por favor, intenta nuevamente.");
                             break;
                     };
                 };
                 break;
 
             case '10':
-                console.log("Saliendo del sistema. ¡Adiós!");
+                console.log("Saliendo del sistema. ¡Adios!");
                 exit = true;
                 break;
             default:
-                console.log("Opción no válida.");
+                console.log("Opcion no valida.");
         };
     };
 

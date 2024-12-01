@@ -21,15 +21,16 @@ Objetos (POO), programación asíncrona, y versionado de código con Git y GitHu
  *Luego situados en  src\config ejecutar el comando: npx ts-node index.ts
 
 *[Tecnologías utilizadas](#tecnologías-utilizadas)
-<img src= ><img>
-<img src= ><img>
-
-*[Personas Contribuyentes](#personas-contribuyentes)
+<br>
+<br>
+<br>
+<img src=java.sript.png><img>
+<img src=type.sript.png><img>
 
 *[Personas-Desarrolladores del Proyecto](#personas-desarrolladores)
 ## Autores
 
-| [<img src="https://avatars.githubusercontent.com/u/182223706?v=4" width=115><br><sub>Mariana Teodorini</sub>]([https://github.com/Teodorini]) |  [<img src="https://avatars.githubusercontent.com/u/92038167?v=4" width=115><br><sub>Kayra Yary</sub>]([https://github.com/guilhermeonrails](https://github.com/ellenpimentel)) |  [<img src="https://avatars.githubusercontent.com/u/184713542?v=4" width=115><br><sub>Celeste Zarate</sub>](https://github.com/genesysaluralatam) |
+| [<img src="https://avatars.githubusercontent.com/u/182223706?v=4" width=115><br><sub>Mariana Teodorini</sub>](https://github.com/Teodorini) |  [<img src="https://avatars.githubusercontent.com/u/92038167?v=4" width=115><br><sub>Kayra Yary</sub>] |  [<img src="https://avatars.githubusercontent.com/u/184713542?v=4" width=115><br><sub>Celeste Zarate</sub>](https://github.com/genesysaluralatam) |
 | :---: | :---: | :---: |
 
 

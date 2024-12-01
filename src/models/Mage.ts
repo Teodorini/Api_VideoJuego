@@ -26,7 +26,7 @@ export class Mage extends Character {
       if (magicPower > 0) {
           this._magicPower = magicPower;
       } else {
-          console.log("El poder mágico debe ser mayor a cero.");
+          console.log("El poder magico debe ser mayor a cero.");
       };
   };
 
@@ -34,7 +34,7 @@ export class Mage extends Character {
       if (mana >= 0) {
           this._mana = mana;
       } else {
-          console.log("El maná no puede ser negativo.");
+          console.log("El mana no puede ser negativo.");
       };
   };
 
@@ -50,7 +50,7 @@ export class Mage extends Character {
           this._mana -= 10;  
           console.log(`${this.name} lanza un hechizo e inflige ${damage} puntos de daño a ${opponent.name}.`);
       } else {
-          console.log(`${this.name} no tiene suficiente maná para lanzar un hechizo.`);
+          console.log(`${this.name} no tiene suficiente mana para lanzar un hechizo.`);
       };
   };
 
@@ -58,9 +58,9 @@ export class Mage extends Character {
   public rechargeMana(amount: number): void {
       if (amount > 0) {
           this._mana += amount;  // Recarga el maná del Mage
-          console.log(`${this.name} recarga ${amount} puntos de maná. Maná actual: ${this._mana}`);
+          console.log(`${this.name} recarga ${amount} puntos de maná. Mana actual: ${this._mana}`);
       } else {
-          console.log("La cantidad de maná a recargar debe ser mayor a cero.");
+          console.log("La cantidad de mana a recargar debe ser mayor a cero.");
       };
   };
 
@@ -68,7 +68,7 @@ export class Mage extends Character {
   public meditate(): void {
       const manaRecovered = 20;
       this._mana += manaRecovered;  // Recarga 20 puntos de maná
-      console.log(`${this.name} medita y recupera ${manaRecovered} puntos de maná. Maná actual: ${this._mana}`);
+      console.log(`${this.name} medita y recupera ${manaRecovered} puntos de maná. Mana actual: ${this._mana}`);
   };
   
 };

@@ -53,7 +53,7 @@ export class Mission {
         if (description && description.trim().length > 0) {
             this._description = description;
         } else {
-            console.log("La descripción no puede estar vacía.");
+            console.log("La descripcion no puede estar vacia.");
         }
     };
 
@@ -94,7 +94,7 @@ export class Mission {
             console.log(`Recompensa obtenida: ${this._reward} puntos de experiencia.`);
 
         } else {
-            console.log("La misión ya ha sido completada.");
+            console.log("La mision ya ha sido completada.");
         };
 
     };
@@ -102,6 +102,6 @@ export class Mission {
     // Método para reiniciar la misión
     public resetMission(): void {
         this._isCompleted = false;
-        console.log(`La misión "${this._description}" ha sido reiniciada.`);
+        console.log(`La mision "${this._description}" ha sido reiniciada.`);
     };
 };

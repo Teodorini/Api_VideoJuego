@@ -2,10 +2,12 @@
   {
     "name": "mario",
     "level": 10,
-    "health": 100,
-    "experience": 90,
+    "health": 80,
+    "experience": 180,
     "inventory": [
-      "martillo"
+      "espada",
+      "Arco",
+      "Flecha"
     ],
     "type": "warrior",
     "attack": 10,
@@ -21,37 +23,26 @@
     ]
   },
   {
-    "name": "Magikoopa",
-    "level": 6,
-    "health": 60,
-    "experience": 0,
+    "name": "Marian",
+    "level": 13,
+    "health": 96,
+    "experience": 400,
     "inventory": [
-      "cristal m�gico"
-    ],
-    "type": "mage",
-    "mana": 50,
-    "magicPower": 15,
-    "missions": []
-  },
-  {
-    "name": "Bowser",
-    "level": 9,
-    "health": 90,
-    "experience": 0,
-    "inventory": [
-      "bolas de energia",
-      "halcones koopa"
+      "Arma de fuego",
+      "Espada",
+      "Bola de fuego",
+      "Cuchilla"
     ],
     "type": "warrior",
     "attack": 10,
     "defense": 5,
     "missions": [
       {
-        "name": "busquedad del hongo dorado",
-        "description": "evitar que rescaten el hongo odrado y que sea devuelto a Toach",
-        "difficulty": 8,
+        "name": "Meli",
+        "description": "salvar a Meli",
+        "difficulty": 10,
         "reward": 100,
-        "type": "event"
+        "type": "Main"
       }
     ]
   }

@@ -9,10 +9,12 @@
       "Arco",
       "Flecha"
     ],
-    "type": "character",
+    "type": "warrior",
+    "attack": 10,
+    "defense": 5,
     "missions": [
       {
-        "name": "rescatar princesa",
+        "name": "rescatar a peach",
         "description": "pelear con kupa en el castillo de fuego",
         "difficulty": 9,
         "reward": 90,
@@ -31,7 +33,9 @@
       "Bola de fuego",
       "Cuchilla"
     ],
-    "type": "character",
+    "type": "warrior",
+    "attack": 10,
+    "defense": 5,
     "missions": [
       {
         "name": "Meli",

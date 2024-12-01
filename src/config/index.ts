@@ -61,13 +61,58 @@ async function mainMenu() {
         const option = readlineSync.question("Selecciona una opcion: ").trim();
 
         switch (option) {
-            case '1':
+          
+            case '1': {
                 const name = readlineSync.question("Nombre del personaje: ").trim();
                 const level = parseInt(readlineSync.question("Nivel inicial: "), 10);
                 const health = parseInt(readlineSync.question("Salud inicial: "), 10);
-                //Llama a createCharacter, que agrega el personaje al arreglo y guarda los cambios
-                console.log(createCharacter(name, level, health));
+            
+                if (isNaN(level) || isNaN(health)) {
+                    console.error("Error: Nivel y salud deben ser valores numéricos válidos.");
+                    break;
+                };
+                
+                //para almacenar la opción seleccionada por el usuario
+                // se inicializa -1 para garantizar que el bucle se ejecute al menos una vez.
+                let type: number = -1;
+
+                // Array con lo tipos de personajes disponibles
+                const options: ('warrior' | 'mage' | 'character')[] = ['warrior', 'mage', 'character'];
+            
+                while (type === -1) {
+                    console.log('Seleccione el tipo de personaje:');
+                    options.forEach((option, index) => {
+                        console.log(`${index + 1}. ${option}`);
+                    });
+                    console.log('0. Cancelar');
+            
+                    // Solicita al usuario la selección
+                    type = parseInt(readlineSync.question('Ingrese el número de la opción: '), 10);
+            
+                    if (type === 0) {
+                        console.log('Operación cancelada por el usuario.');
+                        //para reestablecer la opción y salir del bucle
+                        type = -1; 
+                        break;
+                    };
+            
+                    if (isNaN(type) || type < 1 || type > options.length) {
+                        console.log('Opción inválida. Por favor, intente de nuevo.');
+                        // Restablece la opción para repetir el bucle
+                        type = -1; 
+                    };
+                };
+            
+                // Asigna el tipo de personaje si la selección es válida
+                if (type !== -1) {
+                    const selectedType: 'warrior' | 'mage' | 'character' = options[type - 1]; // Asegura el tipo literal correcto
+            
+                    // Llama a la función createCharacter y confirma la creación.
+                    createCharacter(name, level, health, selectedType);
+                    console.log(`El personaje "${name}" ha sido creado y guardado en el archivo JSON.`);
+                };
                 break;
+            };
             case '2':
                 //Muestra una lista de todos los personajes usando listCharacters
                 console.log(listCharacters());

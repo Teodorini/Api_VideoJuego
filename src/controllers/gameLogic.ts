@@ -22,55 +22,51 @@ function findCharacterByName(name: string): Character | undefined {
 };
 
 // Función para cargar los personajes desde un archivo JSON
+
 function loadCharactersFromFile(): void {
 
-    //Verifica si el archivo existe
+    //verifica si el archivo CHARACTER_FILE existe en el sistema
     if (fs.existsSync(CHARACTER_FILE)) {
         try {
             const data = fs.readFileSync(CHARACTER_FILE, 'utf-8');
-
-            //si el archivo existe, lee los datos y los convierte de JSONa objetos
+            //para convertir la cadena JSON en un array de objetos de tipo CharacterData.
             const loadedCharacters: CharacterData[] = JSON.parse(data);
 
+            //itera sobre cada elemento del array loadedCharacters
             loadedCharacters.forEach((char: CharacterData) => {
-                let character: Character;
-
-                //dependiendo del tipo de personaje crea instancias y las añade a characters
-                if (char.type === 'warrior') {
-                    character = new Warrior(char.name, char.level, char.health, char.attack, char.defense);
-                } else if (char.type === 'mage') {
-                    character = new Mage(char.name, char.level, char.health, char.mana, char.magicPower);
-                } else {
-                    character = new Character(char.name, char.level, char.health);
-                }
-            
-                character.experience = char.experience || 0;
-                character.inventory = Array.isArray(char.inventory) ? char.inventory : [];
-                character.missions = Array.isArray(char.missions) ? char.missions.map(mission => new Mission(mission.name, mission.description, mission.difficulty, mission.reward, mission.type)) : []; // Cargar misiones
-            
-                  // Se agrega linea de codigo para solucionar personaje duplicado en json
-                  const characterExists = characters.some(existingChar => existingChar.name.toLowerCase() === character.name.toLowerCase());
-                  if (!characterExists) {
-                      characters.push(character);
-                  }
+                //para evitar el duplicado de personajes
+                if (!findCharacterByName(char.name)) { 
+                    let character: Character;
+                    if (char.type === 'warrior') {
+                        character = new Warrior(char.name, char.level, char.health, char.attack, char.defense);
+                    } else if (char.type === 'mage') {
+                        character = new Mage(char.name, char.level, char.health, char.mana, char.magicPower);
+                    } else {
+                        character = new Character(char.name, char.level, char.health);
+                    };
+                    
+                    // para signar propiedades
+                    character.experience = char.experience || 0;
+                    character.inventory = Array.isArray(char.inventory) ? char.inventory : [];
+                    character.missions = Array.isArray(char.missions) ? char.missions.map(mission => new Mission(mission.name, mission.description, mission.difficulty, mission.reward, mission.type)) : [];
+                    //agregar el personaje a la collección
+                    characters.push(character);
+                };
             });
-            
 
             console.log('Personajes cargados correctamente.');
         } catch (error) {
             console.error('Error al leer el archivo de personajes:', error);
-        }
+        };
     } else {
-
-        // si el archivo no existe crea un archivo JSON vacio
         console.log('No se encontró el archivo de personajes, creando uno nuevo.');
-        fs.writeFileSync(CHARACTER_FILE, '[]'); // Crea archivo vacío
+        fs.writeFileSync(CHARACTER_FILE, '[]');
     };
 };
 
 // Función para guardar los personajes en un archivo JSON
 function saveCharactersToFile(): void {
-    //con el map se transforma cada objeto Character au un formato complatible con JSON
+    //con el map se transforma cada objeto Character a un formato complatible con JSON
     const charactersData = characters.map((char: Character) => ({
         name: char.name,
         level: char.level,
@@ -98,27 +94,37 @@ function saveCharactersToFile(): void {
 //---Gestión de Personajes---
 
 // Crea un nuevo personaje dependiendo del tipo y lo agrega a la lista
-function createCharacter(name: string, level: number, health: number): void {
+function createCharacter(name: string, level: number, health: number, type: 'warrior' | 'mage' | 'character' = 'character'): void {
+    
+    //validación de los parámetros de entrada
     if (!name || isNaN(level) || isNaN(health)) {
         console.error('Datos invalidos para crear un personaje.');
         return;
     };
 
-    // Verifica si el personaje ya existe
+    //Con some para verificamos existe un personaje en la colección characters con el mismo nombre
     const characterExists = characters.some(char => char.name.toLowerCase() === name.toLowerCase());
-
     if (characterExists) {
         console.error(`El personaje "${name}" ya existe.`);
         return;
     };
 
-    
+    let newCharacter: Character;
 
-    // Crea y agrega el nuevo personaje y se guarda en el archivo json
-    const newCharacter = new Character(name, level, health);
+    //Dependiendo del type, se crea una instancia de Warrior, Mage, o Character 
+    //con los parámetros proporcionados y algunos valores por defecto
+    if (type === 'warrior') {
+        newCharacter = new Warrior(name, level, health, 10, 5); 
+    } else if (type === 'mage') {
+        newCharacter = new Mage(name, level, health, 50, 15); 
+    } else {
+        newCharacter = new Character(name, level, health);
+    };
+
+    // agrega el nuevo personaje y se guarda en el archivo json
     characters.push(newCharacter);
     saveCharactersToFile();
-    console.log(`Personaje "${name}" creado exitosamente.`);
+    console.log(`Personaje "${name}" (${type}) creado exitosamente.`);
 };
 
 // Devuelve la lista completa de personajes en characters

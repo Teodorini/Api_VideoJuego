@@ -4,27 +4,59 @@ import {
     updateCharacter, deleteCharacter, assignMission, listMissions, completeMission, triggerEvent, manageInventory,findCharacterByName
 } from '../controllers/gameLogic';
 
+//Funcion para mostrar texto gradualmente
+function showTextGradually(text: string, colorCode: string, delay = 100): Promise<void> {
+    return new Promise((resolve) => {
+    let index = 0;
+    const interval = setInterval(() => {
+        process.stdout.write(`\x1b[${colorCode}m${text[index]}\x1b[0m`);
+        index++;
+        if (index === text.length) {
+            clearInterval(interval);
+            console.log(); // Salto de línea al finalizar el texto
+            resolve();
+        }
+    }, delay);
+});
+}
 
 async function mainMenu() {
-    console.log("--- BIENVENIDO AL SISTEMA DE JUEGO ---");
+    
+    // Mostrar texto de bienvenida gradualmente y en color
+        const welcomeMessage = "Bienvenido al Sistema de Juego";
+        const colorCode = "36"; // Cyan 
+        await showTextGradually(welcomeMessage, colorCode); //Esperar a que termine la animacion con await
+    
+        // Simula una carga o espera
+        await new Promise(resolve => setTimeout(resolve, 800)); // Retardo para que se vea 
+
     loadCharactersFromFile();
 
     let exit = false;
 
     while (!exit) {
-        console.log("\n----------------------------");
-        console.log("\nMenú de Opciones:");
-        console.log("\n----------------------------");
-        console.log("1. Crear Personaje");
-        console.log("2. Listar Personajes");
-        console.log("3. Actualizar Nivel de un Personaje");
-        console.log("4. Eliminar Personaje");
-        console.log("5. Crear y Asignar Mision");
-        console.log("6. Listar Misiones");
-        console.log("7. Completar Mision");
-        console.log("8. Generar Evento Aleatorio");
-        console.log("9. Gestionar Inventario de un Personaje");
-        console.log("10. Salir");
+    // Llenar la línea con colores diferentes
+        const line1 = "\x1b[31m----------------------------\x1b[0m";  // Rojo
+        const line2 = "\x1b[33m----------------------------\x1b[0m";  // Amarillo
+        const line3 = "\x1b[34m----------------------------\x1b[0m";  // Azul
+
+        console.log(line1);
+        console.log("\n\x1b[36mMenú de Opciones:\x1b[0m");
+        console.log(line2);
+        console.log("\x1b[32m1. Crear Personaje\x1b[0m");
+        console.log("\x1b[32m2. Listar Personajes\x1b[0m");
+        console.log("\x1b[32m3. Actualizar Nivel de un Personaje\x1b[0m");
+        console.log("\x1b[32m4. Eliminar Personaje\x1b[0m");
+        console.log("\x1b[32m5. Crear y Asignar Mision\x1b[0m");
+        console.log("\x1b[32m6. Listar Misiones\x1b[0m");
+        console.log("\x1b[32m7. Completar Mision\x1b[0m");
+        console.log("\x1b[32m8. Generar Evento Aleatorio\x1b[0m");
+        console.log("\x1b[32m9. Gestionar Inventario de un Personaje\x1b[0m");
+        console.log("\x1b[32m10. Salir\x1b[0m");
+
+    // Línea final en un color diferente
+        const line4 = "\x1b[35m----------------------------\x1b[0m";  // Magenta
+        console.log(line4);
 
         const option = readlineSync.question("Selecciona una opcion: ").trim();
 
@@ -142,7 +174,11 @@ async function mainMenu() {
                 break;
 
             case '10':
-                console.log("Saliendo del sistema. ¡Adios!");
+                  // Mensaje de despedida con efecto gradual
+                  const farewellMessage = "Saliendo del sistema. ¡Adios!... Hasta pronto, aventurero.";
+                  const farewellColorCode = "33"; // Amarillo para despedida
+                  await showTextGradually(farewellMessage, farewellColorCode);
+                
                 exit = true;
                 break;
             default:

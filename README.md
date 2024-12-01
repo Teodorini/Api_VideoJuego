@@ -1,9 +1,6 @@
 <h1 align="center"> API Videojuego</h1>
 
-*[Título e imagen de portada](#Título-e-imagen-de-portada)
-
-
-*[Índice](#índice)
+<img src= GettyImages-2112446687.webp><img>
 
 *[Descripción del proyecto](#descripción-del-proyecto)<p>API para 
 gestionar personajes y misiones en un videojuego. Usamos TypeScript, Programación Orientada a 

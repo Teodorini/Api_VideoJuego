@@ -56,7 +56,7 @@ async function mainMenu() {
 
     // Línea final en un color diferente
         const line4 = "\x1b[35m----------------------------\x1b[0m";  // Magenta
-        console.log(line4);
+    console.log(line4);
 
         const option = readlineSync.question("Selecciona una opcion: ").trim();
 
@@ -175,7 +175,7 @@ async function mainMenu() {
 
             case '10':
                   // Mensaje de despedida con efecto gradual
-                  const farewellMessage = "Saliendo del sistema. ¡Adios!... Hasta pronto, aventurero.";
+                  const farewellMessage = "Saliendo del sistema. ¡Adios!... Hasta pronto, aventurera!.";
                   const farewellColorCode = "33"; // Amarillo para despedida
                   await showTextGradually(farewellMessage, farewellColorCode);
                 

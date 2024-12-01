@@ -30,9 +30,7 @@ Objetos (POO), programación asíncrona, y versionado de código con Git y GitHu
 *[Personas-Desarrolladores del Proyecto](#personas-desarrolladores)
 ## Autores
 
-| [<img src="https://avatars.githubusercontent.com/u/182223706?v=4" width=115><br><sub>Mariana Teodorini</sub>](https://github.com/Teodorini)| 
-| [<img src="https://avatars.githubusercontent.com/u/92038167?v=4" width=115><br><sub>Kayra Yary</sub>] | 
-| [<img src="https://avatars.githubusercontent.com/u/184713542?v=4" width=115><br><sub>Celeste Zarate</sub>](https://github.com/CelesteAmiel)|
+| [<img src="https://avatars.githubusercontent.com/u/182223706?v=4" width=115><br><sub>Mariana Teodorini</sub>](https://github.com/Teodorini)|[<img src="https://avatars.githubusercontent.com/u/92038167?v=4" width=115><br><sub>Kayra Yary</sub>]|[<img src="https://avatars.githubusercontent.com/u/184713542?v=4" width=115><br><sub>Celeste Zarate</sub>](https://github.com/CelesteAmiel)|
 | :---: | :---: | :---: |
 
 

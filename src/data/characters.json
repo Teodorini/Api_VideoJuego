@@ -1,16 +1,18 @@
 [
   {
     "name": "mario",
-    "level": 9,
-    "health": 90,
+    "level": 10,
+    "health": 100,
     "experience": 90,
     "inventory": [
       "martillo"
     ],
-    "type": "character",
+    "type": "warrior",
+    "attack": 10,
+    "defense": 5,
     "missions": [
       {
-        "name": "rescatar princesa",
+        "name": "rescatar a peach",
         "description": "pelear con kupa en el castillo de fuego",
         "difficulty": 9,
         "reward": 90,
@@ -19,20 +21,36 @@
     ]
   },
   {
-    "name": "mario",
+    "name": "Magikoopa",
+    "level": 6,
+    "health": 60,
+    "experience": 0,
+    "inventory": [
+      "cristal m�gico"
+    ],
+    "type": "mage",
+    "mana": 50,
+    "magicPower": 15,
+    "missions": []
+  },
+  {
+    "name": "Bowser",
     "level": 9,
     "health": 90,
-    "experience": 90,
+    "experience": 0,
     "inventory": [
-      "espada"
+      "bolas de energia",
+      "halcones koopa"
     ],
-    "type": "character",
+    "type": "warrior",
+    "attack": 10,
+    "defense": 5,
     "missions": [
       {
-        "name": "rescatar princesa",
-        "description": "pelear con kupa en el castillo de fuego",
-        "difficulty": 9,
-        "reward": 90,
+        "name": "busquedad del hongo dorado",
+        "description": "evitar que rescaten el hongo odrado y que sea devuelto a Toach",
+        "difficulty": 8,
+        "reward": 100,
         "type": "event"
       }
     ]

@@ -21,8 +21,8 @@ Objetos (POO), programación asíncrona, y versionado de código con Git y GitHu
  *Luego situados en  src\config ejecutar el comando: npx ts-node index.ts
 
 *[Tecnologías utilizadas](#tecnologías-utilizadas)
-<img><img>
-<img><img>
+<img src= ><img>
+<img src= ><img>
 
 *[Personas Contribuyentes](#personas-contribuyentes)
 
